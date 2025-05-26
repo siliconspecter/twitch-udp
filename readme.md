@@ -17,57 +17,113 @@ connecting as client ID `w7i8a7neoiawo8aow7eaef87oweh8i`, temporarily using port
 
 ### Redeem
 
-| Byte | Description                               |
-| ---- | ----------------------------------------- |
-| 24   | Length of command.                        |
-| 0    |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 4    | Magic number.                             |
-| 0    |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 72   | Redeem UUID.                              |
-| 0    |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 105  |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 33   |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 33   |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 0    |                                           |
+| Byte | Description                                       |
+| ---- | ------------------------------------------------- |
+| 56   | Length of command.                                |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 4    | Magic number.                                     |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 3    | Redeem UUID.                                      |
+| 52   |                                                   |
+| 102  |                                                   |
+| 94   |                                                   |
+| 7    |                                                   |
+| 14   |                                                   |
+| 43   |                                                   |
+| 221  |                                                   |
+| 184  |                                                   |
+| 55   |                                                   |
+| 21   |                                                   |
+| 27   |                                                   |
+| 101  |                                                   |
+| 109  |                                                   |
+| 244  |                                                   |
+| 70   |                                                   |
+| 3    | Length of redeemer's name.                        |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 74   | UTF-32-encoded string containing redeemer's name. |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 111  |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 101  |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 4    | Length of redeem's name.                          |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 84   | UTF-32-encoded string containing redeem's name.   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 101  |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 115  |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 116  |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
 
 ### Chat Message
 
 Emotes are not currently well-supported.  Text will be displayed in their place,
 e.g. `:emotename:`.
 
-| Byte | Description                               |
-| ---- | ----------------------------------------- |
-| 20   | Length of command.                        |
-| 0    |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 5    | Magic number.                             |
-| 0    |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 72   | UTF-32-encoded string containing message. |
-| 0    |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 105  |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 33   |                                           |
-| 0    |                                           |
-| 0    |                                           |
-| 0    |                                           |
+| Byte | Description                                        |
+| ---- | -------------------------------------------------- |
+| 36   | Length of command.                                 |
+| 0    |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
+| 5    | Magic number.                                      |
+| 0    |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
+| 3    | Length of commenter's name.                        |
+| 0    |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
+| 74   | UTF-32-encoded string containing commenter's name. |
+| 0    |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
+| 111  |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
+| 101  |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
+| 3    | Length of message.                                 |
+| 0    |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
+| 72   | UTF-32-encoded string containing message.          |
+| 0    |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
+| 105  |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
+| 33   |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
+| 0    |                                                    |
