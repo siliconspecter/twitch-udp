@@ -1,0 +1,14 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Install dependencies and run",
+      "group": {
+        "isDefault": true,
+        "kind": "build"
+      },
+      "type": "shell",
+      "command": "clear && npm install && clear && node . 127.0.0.1 6772 123456789 w7i8a7neoiawo8aow7eaef87oweh8i 6773"
+    }
+  ]
+}
