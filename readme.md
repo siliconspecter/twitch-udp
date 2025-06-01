@@ -19,7 +19,7 @@ connecting as client ID `w7i8a7neoiawo8aow7eaef87oweh8i`, temporarily using port
 
 | Byte | Description                                       |
 | ---- | ------------------------------------------------- |
-| 56   | Length of command.                                |
+| 60   | Length of command.                                |
 | 0    |                                                   |
 | 0    |                                                   |
 | 0    |                                                   |
@@ -43,6 +43,10 @@ connecting as client ID `w7i8a7neoiawo8aow7eaef87oweh8i`, temporarily using port
 | 109  |                                                   |
 | 244  |                                                   |
 | 70   |                                                   |
+| 50   | Cost of redeem.                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
 | 3    | Length of redeemer's name.                        |
 | 0    |                                                   |
 | 0    |                                                   |
