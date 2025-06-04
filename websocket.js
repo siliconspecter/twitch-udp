@@ -40,6 +40,8 @@ export function connectToWebSocket() {
 
         case 'session_keepalive':
           console.log('Keepalive received.')
+          // TODO: Reconnect if none received
+          // TODO: Do we have reconnect logic for if the websocket closes?
           break
 
         case 'notification':
