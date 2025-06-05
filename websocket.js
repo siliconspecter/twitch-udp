@@ -3,89 +3,114 @@ import { encodeString, send, writeString, writeU32, writeU8, writeUuid } from ".
 
 export function connectToWebSocket() {
   return new Promise((resolve, reject) => {
-    console.log('Connecting to WebSocket...')
+    const closure = new Promise((resolveClose) => {
+      console.log('Connecting to WebSocket...')
 
-    const client = new websocket.w3cwebsocket('wss://eventsub.wss.twitch.tv/ws')
+      const client = new websocket.w3cwebsocket('wss://eventsub.wss.twitch.tv/ws')
 
-    let resolved = false
+      let resolved = false
 
-    client.onerror = (e) => {
-      if (resolved) {
-        throw e
-      } else {
-        reject(e)
+      let timeout = null
+
+      function resetKeepalive() {
+        if (timeout !== null) {
+          clearTimeout(timeout)
+        }
+
+        timeout = setTimeout(() => {
+          timeout = null
+
+          console.log('Keepalive timeout; closing WebSocket...')
+          client.close()
+        }, 15000)
       }
-    }
 
-    client.onopen = () => {
-      console.log('Socket open; waiting for session welcome...')
-    }
+      resetKeepalive()
 
-    client.onclose = () => {
-      if (resolved) {
-        throw new Error('WebSocket closed.')
-      } else {
-        reject(new Error('WebSocket closed.'))
+      client.onerror = (e) => {
+        client.close()
+
+        if (resolved) {
+          throw e
+        } else {
+          reject(e)
+        }
       }
-    }
 
-    client.onmessage = (e) => {
-      const message = JSON.parse(e.data)
+      client.onopen = () => {
+        console.log('Socket open; waiting for session welcome...')
+      }
 
-      switch (message.metadata.message_type) {
-        case 'session_welcome':
-          console.log('Session welcome received.')
-          resolve(message.payload.session.id)
-          break
+      client.onclose = () => {
+        if (resolved) {
+          resolveClose()
+        } else {
+          reject(new Error('WebSocket closed.'))
+        }
+      }
 
-        case 'session_keepalive':
-          console.log('Keepalive received.')
-          break
+      client.onmessage = (e) => {
+        resetKeepalive()
 
-        case 'notification':
-          switch (message.payload.subscription.type) {
-            case 'channel.channel_points_custom_reward_redemption.add': {
-              console.log(`${message.payload.event.user_name} redeemed ${message.payload.event.reward.title} (${message.payload.event.reward.id}) for ${message.payload.event.reward.cost} byte(s).`)
-              const userName = encodeString(message.payload.event.user_name);
-              const rewardTitle = encodeString(message.payload.event.reward.title);
-              writeU32(4 + 16 + 4 + 4 + userName.byteLength + 4 + rewardTitle.byteLength)
-              writeU32(4)
-              writeUuid(message.payload.event.reward.id)
-              writeU32(message.payload.event.reward.cost)
-              writeString(userName)
-              writeString(rewardTitle)
-              void send()
-              break
+        const message = JSON.parse(e.data)
+
+        switch (message.metadata.message_type) {
+          case 'session_welcome':
+            console.log('Session welcome received.')
+            resolved = true
+            resolve({ sessionId: message.payload.session.id, closure })
+
+            break
+
+          case 'session_keepalive':
+            console.log('Keepalive received.')
+            break
+
+          case 'notification':
+            switch (message.payload.subscription.type) {
+              case 'channel.channel_points_custom_reward_redemption.add': {
+                console.log(`${message.payload.event.user_name} redeemed ${message.payload.event.reward.title} (${message.payload.event.reward.id}) for ${message.payload.event.reward.cost} byte(s).`)
+                const userName = encodeString(message.payload.event.user_name);
+                const rewardTitle = encodeString(message.payload.event.reward.title);
+                writeU32(4 + 16 + 4 + 4 + userName.byteLength + 4 + rewardTitle.byteLength)
+                writeU32(4)
+                writeUuid(message.payload.event.reward.id)
+                writeU32(message.payload.event.reward.cost)
+                writeString(userName)
+                writeString(rewardTitle)
+                void send()
+                break
+              }
+
+              case 'channel.chat.message': {
+                const userName = encodeString(message.payload.event.chatter_user_name);
+                const combined = encodeString(message.payload.event.message.fragments.map(item => {
+                  switch (item.type) {
+                    case 'text':
+                      return item.text
+
+                    case 'emote':
+                      return `:${item.text}:`
+                  }
+                }).join(''))
+
+                writeU32(4 + 4 + userName.byteLength + 4 + combined.byteLength)
+                writeU32(5)
+                writeString(userName)
+                writeString(combined)
+                void send()
+                break
+              }
+
+              default:
+                console.warn(`Received unimplemented subscription type "${message.payload.subscription.type}".`)
             }
+            break
 
-            case 'channel.chat.message': {
-              const userName = encodeString(message.payload.event.chatter_user_name);
-              const combined = encodeString(message.payload.event.message.fragments.map(item => {
-                switch (item.type) {
-                  case 'text':
-                    return item.text
-
-                  case 'emote':
-                    return `:${item.text}:`
-                }
-              }).join(''))
-
-              writeU32(4 + 4 + userName.byteLength + 4 + combined.byteLength)
-              writeU32(5)
-              writeString(userName)
-              writeString(combined)
-              void send()
-              break
-            }
-
-            default:
-              console.warn(`Received unimplemented subscription type "${message.payload.subscription.type}".`)
-          }
-          break
-
-        default:
-          console.warn(`Received unimplemented message type "${message.metadata.message_type}".`)
+          default:
+            console.warn(`Received unimplemented message type "${message.metadata.message_type}".`)
+        }
       }
-    }
+    })
   })
 }

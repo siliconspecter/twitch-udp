@@ -23,7 +23,26 @@ if (! /^[1-9][0-9]{0,3}$|^[0-5][0-9]{4}$|^6[0-4][0-9]{3}$|^65[0-4][0-9]{2}$|^655
   throw new Error(`Failed to determine temporary port ("${temporaryPort}").`)
 }
 
-const oauthToken = await acquireOAuthToken(clientId, temporaryPort)
-const sessionId = await connectToWebSocket()
 configureUdp(recipientAddress, recipientPort)
-await subscribeToEvents(clientId, userId, oauthToken, sessionId)
+
+const oauthToken = await acquireOAuthToken(clientId, temporaryPort)
+
+while (true) {
+  let sessionId, closure
+
+  try {
+    const copy = await connectToWebSocket()
+    sessionId = copy.sessionId
+    closure = copy.closure
+  } catch (e) {
+    console.error(e)
+    console.log("Will retry connecting to the WebSocket after a short delay.")
+    await new Promise((resolve) => {
+      setTimeout(resolve, 5000)
+    })
+    continue
+  }
+  await subscribeToEvents(clientId, userId, oauthToken, sessionId)
+  await closure
+  console.log("Will retry connecting to the WebSocket now.")
+}
