@@ -42,6 +42,10 @@ export function connectToWebSocket() {
       }
 
       client.onclose = () => {
+        if (timeout !== null) {
+          clearTimeout(timeout)
+        }
+
         if (resolved) {
           resolveClose()
         } else {
