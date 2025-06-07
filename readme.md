@@ -19,7 +19,7 @@ connecting as client ID `w7i8a7neoiawo8aow7eaef87oweh8i`, temporarily using port
 
 | Byte | Description                                       |
 | ---- | ------------------------------------------------- |
-| 60   | Length of command.                                |
+| 65   | Length of command.                                |
 | 0    |                                                   |
 | 0    |                                                   |
 | 0    |                                                   |
@@ -68,6 +68,26 @@ connecting as client ID `w7i8a7neoiawo8aow7eaef87oweh8i`, temporarily using port
 | 0    |                                                   |
 | 0    |                                                   |
 | 84   | UTF-32-encoded string containing redeem's name.   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 101  |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 115  |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 116  |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 4    | Length of free-text entered by the user.          |
+| 0    |                                                   |
+| 0    |                                                   |
+| 0    |                                                   |
+| 84   | UTF-32-encoded string containing free-text.       |
 | 0    |                                                   |
 | 0    |                                                   |
 | 0    |                                                   |

@@ -73,15 +73,17 @@ export function connectToWebSocket() {
           case 'notification':
             switch (message.payload.subscription.type) {
               case 'channel.channel_points_custom_reward_redemption.add': {
-                console.log(`${message.payload.event.user_name} redeemed ${message.payload.event.reward.title} (${message.payload.event.reward.id}) for ${message.payload.event.reward.cost} byte(s).`)
+                console.log(`${message.payload.event.user_name} redeemed ${message.payload.event.reward.title} (${message.payload.event.reward.id}) for ${message.payload.event.reward.cost} byte(s)${message.payload.event.user_input === '' ? '' : ` saying "${message.payload.event.user_input}"`}.`)
                 const userName = encodeString(message.payload.event.user_name);
                 const rewardTitle = encodeString(message.payload.event.reward.title);
-                writeU32(4 + 16 + 4 + 4 + userName.byteLength + 4 + rewardTitle.byteLength)
+                const userInput = encodeString(message.payload.event.user_input);
+                writeU32(4 + 16 + 4 + 4 + userName.byteLength + 4 + rewardTitle.byteLength + 4 + userInput.byteLength)
                 writeU32(4)
                 writeUuid(message.payload.event.reward.id)
                 writeU32(message.payload.event.reward.cost)
                 writeString(userName)
                 writeString(rewardTitle)
+                writeString(userInput)
                 void send()
                 break
               }
